@@ -492,7 +492,7 @@
           colorVariable = session.style.widgets['node-color-variable'];
       layers.nodes = L.geoJSON(makeNodeGeoJSON(), {
         pointToLayer: function(feature, latlng){
-          return L.circleMarker(latlng, Object.assign({}, style, {
+          return L.markerClusterGroup(latlng, Object.assign({}, style, {
             color: feature.properties.selected ? session.style.widgets['selected-color'] : '#ffffff',
             fillColor: colorVariable === 'None' ? fillcolor : temp.style.nodeColorMap(feature.properties[colorVariable])
           }));
@@ -505,6 +505,29 @@
         .addTo(map).bringToFront();
     }
 
+/*    function drawNodes(){
+      layers.nodes.remove();
+      if(!session.style.widgets['map-node-show']) return;
+      let style = {
+        fillOpacity: 1 - session.style.widgets['map-node-transparency']
+      };
+      let fillcolor = session.style.widgets['node-color'],
+          colorVariable = session.style.widgets['node-color-variable'];
+      layers.nodes = L.geoJSON(makeNodeGeoJSON(), {
+        pointToLayer: function(feature, latlng){
+          return L.circleMarker(latlng, Object.assign({}, style, {
+            color: feature.properties.selected ? session.style.widgets['selected-color'] : '#ffffff',
+            fillColor: colorVariable === 'None' ? fillcolor : temp.style.nodeColorMap(feature.properties[colorVariable])
+          }));
+        }
+      });
+      layers.nodes
+        .on('mouseover', showNodeTooltip)
+        .on('mouseout', hideTooltip)
+        .on('click', clickHandler)
+        .addTo(map).bringToFront();
+    }    
+*/
     function drawLinks(){
       layers.links.remove();
       if(!session.style.widgets['map-link-show']) return;
