@@ -485,9 +485,20 @@
     function drawNodes(){
       layers.nodes.remove();
       if(!session.style.widgets['map-node-show']) return;
+      let style = {
+        fillOpacity: 1 - session.style.widgets['map-node-transparency']
+      };
+      let fillcolor = session.style.widgets['node-color'],
+          colorVariable = session.style.widgets['node-color-variable'];
+      let markers = L.markerClusterGroup();
+      markers.addLayer(L.marker(getRandomLatLng(map)));
+      map.addLayer(markers);
       layers.nodes = L.geoJSON(makeNodeGeoJSON(), {
         pointToLayer: function(feature, latlng){
-          return L.markerClusterGroup();
+          return L.circleMarker(latlng, Object.assign({}, style, {
+            color: feature.properties.selected ? session.style.widgets['selected-color'] : '#ffffff',
+            fillColor: colorVariable === 'None' ? fillcolor : temp.style.nodeColorMap(feature.properties[colorVariable])
+          }));
         }
       });
       layers.nodes
@@ -495,7 +506,8 @@
         .on('mouseout', hideTooltip)
         .on('click', clickHandler)
         .addTo(map).bringToFront();
-    }
+    }    
+
 
 /*    function drawNodes(){
       layers.nodes.remove();
